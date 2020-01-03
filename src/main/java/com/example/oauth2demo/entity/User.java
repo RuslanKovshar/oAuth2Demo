@@ -1,10 +1,12 @@
 package com.example.oauth2demo.entity;
 
 import javax.persistence.*;
+import javax.security.auth.Subject;
+import java.security.Principal;
 
 @Entity
 @Table(name = "users")
-public class User  {
+public class User implements Principal {
 
     @Id
     private String id;
@@ -54,4 +56,15 @@ public class User  {
                 ", email='" + email + '\'' +
                 '}';
     }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public boolean implies(Subject subject) {
+        return false;
+    }
+
 }

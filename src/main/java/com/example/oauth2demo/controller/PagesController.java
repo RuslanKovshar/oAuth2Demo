@@ -1,20 +1,15 @@
 package com.example.oauth2demo.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/")
+import java.security.Principal;
+
+@RestController
 public class PagesController {
 
-    @GetMapping
-    public String welcomePage() {
-        return "index";
-    }
-
-    @GetMapping("/secured")
-    public String securedPage() {
-        return "secure";
+    @RequestMapping("/user")
+    public Principal user(Principal principal) {
+        return principal;
     }
 }
