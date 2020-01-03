@@ -18,8 +18,11 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilt
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.filter.CompositeFilter;
 
 import javax.servlet.Filter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -46,15 +49,41 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private Filter ssoFilter() {
+        CompositeFilter filter = new CompositeFilter();
+        List<Filter> filters = new ArrayList<>();
+
         OAuth2ClientAuthenticationProcessingFilter gitHubFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/gitHub");
         OAuth2RestTemplate gitHubTemplate = new OAuth2RestTemplate(gitHub(), oAuth2ClientContext);
         gitHubFilter.setRestTemplate(gitHubTemplate);
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(gitHubResource().getUserInfoUri(), gitHub().getClientId());
-        tokenServices.setRestTemplate(gitHubTemplate);
-        gitHubFilter.setTokenServices(tokenServices);
-        return gitHubFilter;
+        UserInfoTokenServices gitHubTokenServices = new UserInfoTokenServices(gitHubResource().getUserInfoUri(), gitHub().getClientId());
+        gitHubTokenServices.setRestTemplate(gitHubTemplate);
+        gitHubFilter.setTokenServices(gitHubTokenServices);
+        filters.add(gitHubFilter);
+
+        OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
+        OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oAuth2ClientContext);
+        googleFilter.setRestTemplate(googleTemplate);
+        UserInfoTokenServices googleTokenServices = new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId());
+        googleTokenServices.setRestTemplate(googleTemplate);
+        googleFilter.setTokenServices(googleTokenServices);
+        filters.add(googleFilter);
+
+        filter.setFilters(filters);
+        return filter;
     }
 
+
+    @Bean
+    @ConfigurationProperties("google.client")
+    public AuthorizationCodeResourceDetails google() {
+        return new AuthorizationCodeResourceDetails();
+    }
+
+    @Bean
+    @ConfigurationProperties("google.resource")
+    public ResourceServerProperties googleResource(){
+        return new ResourceServerProperties();
+    }
 
     @Bean
     @ConfigurationProperties("github.client")
