@@ -1,5 +1,6 @@
 package com.example.oauth2demo.config;
 
+import com.example.oauth2demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -8,9 +9,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -30,10 +34,16 @@ import java.util.List;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final OAuth2ClientContext oAuth2ClientContext;
+    private final UserService userService;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    public WebSecurityConfig(@Qualifier("oauth2ClientContext") OAuth2ClientContext oAuth2ClientContext) {
+    public WebSecurityConfig(@Qualifier("oauth2ClientContext") OAuth2ClientContext oAuth2ClientContext,
+                             UserService userService,
+                             PasswordEncoder encoder) {
         this.oAuth2ClientContext = oAuth2ClientContext;
+        this.userService = userService;
+        this.encoder = encoder;
     }
 
     @Override
@@ -41,11 +51,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/webjars/**")
+                .antMatchers("/login**", "/registration", "/webjars/**")
                 .permitAll()
                 .anyRequest().authenticated()
-                .and().logout().logoutSuccessUrl("/").permitAll()
-                .and().addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("email")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
+                .permitAll()
+                .and()
+                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(encoder);
     }
 
     private Filter ssoFilter() {
@@ -72,7 +95,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-
     @Bean
     @ConfigurationProperties("google.client")
     public AuthorizationCodeResourceDetails google() {
@@ -81,7 +103,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     @ConfigurationProperties("google.resource")
-    public ResourceServerProperties googleResource(){
+    public ResourceServerProperties googleResource() {
         return new ResourceServerProperties();
     }
 
