@@ -1,8 +1,10 @@
 package com.example.oauth2demo.config;
 
+import com.example.oauth2demo.entity.User;
 import com.example.oauth2demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -48,22 +50,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        //@formatter:off
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login**", "/registration", "/webjars/**")
-                .permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/login**").permitAll()
+                    .antMatchers("/registration").permitAll()
+                    .antMatchers("/webjars/**").permitAll()
+                    .antMatchers("/js/**").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .usernameParameter("email")
+                    .formLogin()
+                    .loginPage("/login")
+                    .usernameParameter("email")
                 .and()
-                .logout()
-                .logoutSuccessUrl("/")
-                .permitAll()
+                    .logout()
+                    .logoutSuccessUrl("/")
+                    .permitAll()
                 .and()
-                .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+                    .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+        //@formatter:on
     }
 
     @Override
@@ -80,6 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         gitHubFilter.setRestTemplate(gitHubTemplate);
         UserInfoTokenServices gitHubTokenServices = new UserInfoTokenServices(gitHubResource().getUserInfoUri(), gitHub().getClientId());
         gitHubTokenServices.setRestTemplate(gitHubTemplate);
+        gitHubTokenServices.setPrincipalExtractor(gitHubPrincipalExtractor());
         gitHubFilter.setTokenServices(gitHubTokenServices);
         filters.add(gitHubFilter);
 
@@ -88,11 +95,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         googleFilter.setRestTemplate(googleTemplate);
         UserInfoTokenServices googleTokenServices = new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId());
         googleTokenServices.setRestTemplate(googleTemplate);
+        googleTokenServices.setPrincipalExtractor(googlePrincipalExtractor());
         googleFilter.setTokenServices(googleTokenServices);
         filters.add(googleFilter);
 
         filter.setFilters(filters);
         return filter;
+    }
+
+    @Bean
+    public PrincipalExtractor gitHubPrincipalExtractor() {
+        return (map) -> {
+            String login = (String) map.get("login");
+            String email = (String) map.get("email");
+            String avatarUrl = (String) map.get("avatar_url");
+            return new User(login, email, avatarUrl);
+        };
+    }
+
+    @Bean
+    public PrincipalExtractor googlePrincipalExtractor() {
+        return (map -> {
+            String login = (String) map.get("name");
+            String email = (String) map.get("email");
+            String avatarUrl = (String) map.get("picture");
+            return new User(login, email, avatarUrl);
+        });
     }
 
     @Bean

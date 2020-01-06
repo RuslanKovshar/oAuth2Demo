@@ -1,5 +1,6 @@
 package com.example.oauth2demo.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,27 +18,32 @@ public class User implements Principal, UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String secondName;
+    private String login;
 
     @Column(nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
+
+    private String avatarPath;
 
     public User() {
     }
 
-    public User(String firstName, String secondName, String email, String password) {
-        this.firstName = firstName;
-        this.secondName = secondName;
+    public User(String login, String email, String avatarPath) {
+        this.login = login;
         this.email = email;
-        this.password = password;
+        this.avatarPath = avatarPath;
     }
 
+    public User(String login, String email, String password, String avatarPath) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
+        this.avatarPath = avatarPath;
+    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -51,22 +57,6 @@ public class User implements Principal, UserDetails {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -75,13 +65,29 @@ public class User implements Principal, UserDetails {
         this.email = email;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
+                "id=" + id +
+                ", login='" + login + '\'' +
                 ", email='" + email + '\'' +
+                ", avatarPath='" + avatarPath + '\'' +
                 '}';
     }
 

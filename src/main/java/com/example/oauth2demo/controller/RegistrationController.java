@@ -27,8 +27,8 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String createNewUser(CreateUserDto userDto) {
-        System.out.println(userDto);
+    public String createNewUser(CreateUserDto userDto/*, @RequestParam(name = "file") MultipartFile file*/) {
+        System.out.println(userDto.getFile().getOriginalFilename());
         boolean isCreated = userService.createNewUser(userDto);
         if (isCreated) {
             return "redirect:";

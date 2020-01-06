@@ -3,8 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>SecurePage</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+    <script src="/js/main.js"></script>
 </head>
-<body>
-    <h1>This is secured page!</h1>
+<body ng-app="mainApp">
+<h1>This is secured page!</h1>
+<div ng-controller="AppCtrl">
+    <div ng-model="user">
+        <p>{{user}}</p>
+    </div>
+    <div ng-model="userPic">
+        <p>{{userPic}}</p>
+        <img src="{{userPic}}" class="img-thumbnail" alt="">
+    </div>
+</div>
+<form action="/logout" method="post">
+    <button type="submit">Logout</button>
+</form>
 </body>
 </html>

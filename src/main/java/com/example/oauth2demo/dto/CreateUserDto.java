@@ -1,33 +1,28 @@
 package com.example.oauth2demo.dto;
 
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 public class CreateUserDto {
 
-    private String firstName;
-    private String secondName;
+    private String login;
     private String email;
     private String password;
+    private MultipartFile file;
 
-    public CreateUserDto(String firstName, String secondName, String email, String password) {
-        this.firstName = firstName;
-        this.secondName = secondName;
+    public CreateUserDto(String login, String email, String password, MultipartFile file) {
+        this.login = login;
         this.email = email;
         this.password = password;
+        this.file = file;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getLogin() {
+        return login;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public void setSecondName(String secondName) {
-        this.secondName = secondName;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getEmail() {
@@ -46,13 +41,11 @@ public class CreateUserDto {
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return "CreateUserDto{" +
-                "firstName='" + firstName + '\'' +
-                ", secondName='" + secondName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 }

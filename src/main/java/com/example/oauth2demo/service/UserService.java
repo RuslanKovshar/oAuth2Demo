@@ -30,10 +30,11 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean createNewUser(CreateUserDto userDto) {
-        User user = new User(userDto.getFirstName(),
-                userDto.getSecondName(),
+       //TODO: remove null
+        User user = new User(userDto.getLogin(),
                 userDto.getEmail(),
-                encoder.encode(userDto.getPassword()));
+                encoder.encode(userDto.getPassword()),
+                null);
         try {
             userRepository.save(user);
             return true;
