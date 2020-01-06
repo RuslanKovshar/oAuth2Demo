@@ -21,25 +21,26 @@
                     <form action="/registration" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="InputLogin">Login</label>
-                            <input type="text" class="form-control rounded-pill" id="InputLogin" name="login">
+                            <input type="text" class="form-control " id="InputLogin" name="login">
                         </div>
-                        <div class="form-group">
-                            <label for="InputFile">Choose Avatar</label>
-                            <input type="file" class="form-control rounded-pill" id="InputFile" name="file">
+                        <label for="customFileDiv">Avatar</label>
+                        <div class="custom-file" id="customFileDiv">
+                            <input type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">Email address</label>
-                            <input type="email" class="form-control rounded-pill" id="exampleInputEmail1" name="email"
+                            <input type="email" class="form-control " id="exampleInputEmail1" name="email"
                                    aria-describedby="emailHelp">
                             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                                 else.</small>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Password</label>
-                            <input type="password" class="form-control rounded-pill" id="exampleInputPassword1"
+                            <input type="password" class="form-control " id="exampleInputPassword1"
                                    name="password">
                         </div>
-                        <button type="submit" class="btn btn-lg btn-block btn-primary rounded-pill mt-4">Create user
+                        <button type="submit" class="btn btn-lg btn-block btn-primary  mt-4">Create user
                         </button>
                     </form>
                 </div>
