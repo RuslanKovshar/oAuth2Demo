@@ -10,7 +10,7 @@ app.controller("AppCtrl", function ($scope, $http) {
     }).then(function (data) {
         let user = data.data.principal;
         console.log(user);
-        $scope.user = user;
+        $scope.user = user.login;
         $scope.userPic = user.avatarPath;
     });
 

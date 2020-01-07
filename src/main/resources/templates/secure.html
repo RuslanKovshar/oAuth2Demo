@@ -4,10 +4,39 @@
     <meta charset="UTF-8">
     <title>SecurePage</title>
 
+
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
     <script src="/static/main.js"></script>
 </head>
 <body ng-app="mainApp">
+<nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between" ng-controller="AppCtrl">
+    <a class="navbar-brand" href="#">OAuth2Demo</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <div>
+            <!-- Image and text -->
+
+            <form action="/logout" method="post" class="form-inline">
+                <a class="navbar-brand" href="#" ng-model="userPic">
+                    <img src="{{userPic}}" width="30" height="30"
+                         class="d-inline-block align-top" alt="">
+                    <span ng-model="user"><a href="#">{{user}}</a></span>
+                </a>
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
 <h1>This is secured page!</h1>
 <div ng-controller="AppCtrl">
     <div ng-model="user">
@@ -18,7 +47,8 @@
         <img src="{{userPic}}" class="img-thumbnail" alt="">
     </div>
 </div>
-<img src="img/C:/ProjectImages/d237dc8c-5897-4fed-93cf-792853d725bc.avengers-endgame-from-the-ashes-i72284.jpg" class="img-thumbnail" alt="">
+<img src="img/C:/ProjectImages/d237dc8c-5897-4fed-93cf-792853d725bc.avengers-endgame-from-the-ashes-i72284.jpg"
+     class="img-thumbnail" alt="">
 <form action="/logout" method="post">
     <button type="submit">Logout</button>
 </form>
