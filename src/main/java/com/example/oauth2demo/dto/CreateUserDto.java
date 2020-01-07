@@ -1,7 +1,8 @@
 package com.example.oauth2demo.dto;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.UUID;
 
 public class CreateUserDto {
 
@@ -9,6 +10,17 @@ public class CreateUserDto {
     private String email;
     private String password;
     private MultipartFile file;
+    private String filePath;
+
+    public void makePath(String uploadPath) {
+        if (file != null) {
+            String originalFilename = file.getOriginalFilename();
+            UUID uuid = UUID.randomUUID();
+            String finalFilename = uuid + "." + originalFilename;
+            System.err.println(uploadPath);
+            this.filePath = uploadPath + "\\" + finalFilename;
+        }
+    }
 
     public CreateUserDto(String login, String email, String password, MultipartFile file) {
         this.login = login;
@@ -47,5 +59,13 @@ public class CreateUserDto {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

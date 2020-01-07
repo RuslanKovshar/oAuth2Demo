@@ -7,11 +7,8 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
-  #spring.security.oauth2.client.registration.google.client-id=${googleClientId}
-  #spring.security.oauth2.client.registration.google.client-secret=${googleClientSecret}
-
-  #spring.security.oauth2.client.registration.github.client-id=${gitHubClientId}
-  #spring.security.oauth2.client.registration.github.client-secret=${gitHubClientSecret}
+upload:
+  path: C:\ProjectImages
 
 google:
   client:
