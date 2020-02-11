@@ -5,7 +5,7 @@ app.controller("AppCtrl", function ($scope, $http) {
     $scope.userPic = {};
     $http({
         method: "GET",
-        url: "/user",
+        url: "/api/user",
         headers: {"Content-Type": "application/json"}
     }).then(function (data) {
         let user = data.data.principal;
