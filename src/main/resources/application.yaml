@@ -5,7 +5,7 @@ spring:
     password: Rjdifh_1999
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 upload:
   path: C:\ProjectImages
